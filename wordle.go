@@ -21,7 +21,7 @@ func LoadWords() []string {
 	// Placeholder: Load words from a database or file.
 	// words := strings.Split(string(dat), " ")
 	// fmt.Println(words)
-	return strings.Split(string(dat), " ")
+	return strings.Split(string(dat), "\n")
 }
 
 // FilterWords filters the list of words based on the game's feedback.
