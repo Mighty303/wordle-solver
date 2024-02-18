@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// Check if theres an error reading the file
 func check(e error) {
 	if e != nil {
 		panic(e)
@@ -20,16 +21,29 @@ func LoadWords() []string {
 
 	// Placeholder: Load words from a database or file.
 	// words := strings.Split(string(dat), " ")
-	// fmt.Println(words)
-	return strings.Split(string(dat), "\n")
+	words := strings.Split(string(dat), "\n")
+	return words
 }
 
 // FilterWords filters the list of words based on the game's feedback.
-func FilterWords(words []string, feedback string) []string {
-	// Placeholder: Implement the filtering logic based on the feedback.
+func FilterWords(words []string, correct string, valid string, absent string) []string {
+	newWords := make([]string, 0, len(words))
+
 	// For example, if the feedback indicates that the letter 'a' is in the correct position 1,
 	// you would filter the list to include only words with 'a' in position 1.
+	correctPositions := strings.Split(correct, "")
 
+	for _, word := range words {
+		for i := 0; i < len(correctPositions); i++ {
+            if len(word) > 0 && strings.ToLower(correctPositions[i]) == string([]rune(word)[i]) {
+                fmt.Printf("correct: %c Word: %c\n", strings.ToLower(correctPositions[i]), string([]rune(word)[i]))
+				newWords = append(newWords, word)
+			}
+		}
+	}
+
+	// fmt.Println(correctPositions)
+	fmt.Println(newWords)
 	return words // Return the filtered list of words.
 }
 
@@ -37,16 +51,31 @@ func FilterWords(words []string, feedback string) []string {
 func SuggestWord(words []string) string {
 	// Placeholder: Implement the logic to choose the next word to suggest.
 	// This could be based on frequency analysis, elimination strategy, or random selection.
+
 	return words[0] // Return the first word in the list as a simple example.
 }
 
 func main() {
+	var correct string
+	var valid string
+	var absent string
+
 	// Load the list of valid words.
-	words := LoadWords()
+	var words = LoadWords()
 
 	// Placeholder: Loop to receive user input and provide suggestions.
-	feedback := "some feedback from the game"
-	words = FilterWords(words, feedback)
+	// fmt.Print("Enter correct letters (ex. A..L.): ")
+	// fmt.Scan(&correct)
+	// fmt.Print("Enter valid letters (ex. PE): ")
+	// fmt.Scan(&valid)
+	// fmt.Print("Enter absent letters: (ex. DVBNM): ")
+	// fmt.Scan(&absent)
+
+	correct = "A..L."
+	valid = "PE"
+	absent = "DVBMN"
+
+	words = FilterWords(words, correct, valid, absent)
 	suggestion := SuggestWord(words)
 	fmt.Printf("Suggested word: %s\n", suggestion)
 }
