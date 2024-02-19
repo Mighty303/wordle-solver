@@ -17,20 +17,13 @@ func check(e error) {
 func LoadWords() []string {
 	dat, err := os.ReadFile("words.txt")
 	check(err)
-	// fmt.Println(string(dat))
-
-	// Placeholder: Load words from a database or file.
-	// words := strings.Split(string(dat), " ")
-	words := strings.Split(string(dat), "\n")
-	return words
+	return strings.Split(string(dat), "\n")
 }
 
 // FilterWords filters the list of words based on the game's feedback.
 func FilterWords(words []string, correct string, valid string, absent string) []string {
 	newWords := make([]string, 0, len(words))
 
-	// For example, if the feedback indicates that the letter 'a' is in the correct position 1,
-	// you would filter the list to include only words with 'a' in position 1.
 	correctPositions := strings.Split(correct, "")
 	absentPositions := strings.Split(absent, "")
 	validPositions := strings.Split(valid, "")
@@ -44,6 +37,7 @@ func FilterWords(words []string, correct string, valid string, absent string) []
 				chr := strings.ToLower(correctPositions[i])
 				if chr != "." && chr != string(rune(word[i])) {
 					match = false
+					break
 				}
 			}
 
@@ -51,6 +45,7 @@ func FilterWords(words []string, correct string, valid string, absent string) []
 			for i := 0; i < len(absentPositions); i++ {
 				if strings.Contains(word, strings.ToLower(absentPositions[i])) {
 					match = false
+					break
 				}
 			}
 
@@ -58,6 +53,7 @@ func FilterWords(words []string, correct string, valid string, absent string) []
 			for i := 0; i < len(validPositions); i++ {
 				if !strings.Contains(word, strings.ToLower(validPositions[i])) {
 					match = false
+					break
 				}
 			}
 
@@ -68,7 +64,6 @@ func FilterWords(words []string, correct string, valid string, absent string) []
 		}
 	}
 
-	// fmt.Println(correctPositions)
 	return newWords // Return the filtered list of words.
 }
 
@@ -91,19 +86,27 @@ func main() {
 	// Load the list of valid words.
 	var words = LoadWords()
 
+	// Sample data
+	// correct = "A..L."
+	// valid = "PE"
+	// absent = "DVBMNZX"
+	correct = "....E"
+	valid = "R"
+	absent = "CAN"
+
 	// Placeholder: Loop to receive user input and provide suggestions.
-	// fmt.Print("Enter correct letters (ex. A..L.): ")
-	// fmt.Scan(&correct)
-	// fmt.Print("Enter valid letters (ex. PE): ")
-	// fmt.Scan(&valid)
-	// fmt.Print("Enter absent letters: (ex. DVBNM): ")
-	// fmt.Scan(&absent)
+	// for i := 0; i < 6; i++ {
+	// 	fmt.Print("Enter correct letters (ex. A..L.): ")
+	// 	fmt.Scan(&correct)
+	// 	fmt.Print("Enter valid letters (ex. PE): ")
+	// 	fmt.Scan(&valid)
+	// 	fmt.Print("Enter absent letters: (ex. DVBNM): ")
+	// 	fmt.Scan(&absent)
+	
+		words = FilterWords(words, correct, valid, absent)
+		suggestion := SuggestWord(words)
+		fmt.Printf("Suggested word: %s\n", suggestion)
+	// }
 
-	correct = "A..L."
-	valid = "PE"
-	absent = "DVBMNZX"
 
-	words = FilterWords(words, correct, valid, absent)
-	suggestion := SuggestWord(words)
-	fmt.Printf("Suggested word: %s\n", suggestion)
 }
