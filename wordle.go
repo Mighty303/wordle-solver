@@ -33,11 +33,13 @@ func FilterWords(words []string, correct string, valid string, absent string) []
 	// you would filter the list to include only words with 'a' in position 1.
 	correctPositions := strings.Split(correct, "")
 	absentPositions := strings.Split(absent, "")
+	validPositions := strings.Split(valid, "")
 
 	// Eliminate non correct words
 	for _, word := range words {
 		if len(word) > 0 {
 			match := true
+			// Eliminate incorrect letters
 			for i := 0; i < len(correctPositions); i++ {
 				chr := strings.ToLower(correctPositions[i])
 				if chr != "." && chr != string(rune(word[i])) {
@@ -45,8 +47,16 @@ func FilterWords(words []string, correct string, valid string, absent string) []
 				}
 			}
 
+			// Elminate absent letters
 			for i := 0; i < len(absentPositions); i++ {
 				if strings.Contains(word, strings.ToLower(absentPositions[i])) {
+					match = false
+				}
+			}
+
+			// Elminate invalid letters
+			for i := 0; i < len(validPositions); i++ {
+				if !strings.Contains(word, strings.ToLower(validPositions[i])) {
 					match = false
 				}
 			}
@@ -95,5 +105,5 @@ func main() {
 
 	words = FilterWords(words, correct, valid, absent)
 	suggestion := SuggestWord(words)
-	fmt.Printf("Suggested words: %s\n", suggestion)
+	fmt.Printf("Suggested word: %s\n", suggestion)
 }
