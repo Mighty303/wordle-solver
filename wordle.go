@@ -33,26 +33,37 @@ func FilterWords(words []string, correct string, valid string, absent string) []
 	// you would filter the list to include only words with 'a' in position 1.
 	correctPositions := strings.Split(correct, "")
 
+	// Eliminate non correct words
 	for _, word := range words {
-		for i := 0; i < len(correctPositions); i++ {
-            if len(word) > 0 && strings.ToLower(correctPositions[i]) == string([]rune(word)[i]) {
-                fmt.Printf("correct: %c Word: %c\n", strings.ToLower(correctPositions[i]), string([]rune(word)[i]))
+		if len(word) > 0 {
+			match := true
+			for i := 0; i < len(correctPositions); i++ {
+				chr := strings.ToLower(correctPositions[i])
+				if chr != "." && chr != string(rune(word[i])) {
+					match = false
+				}
+			}
+			
+			if match {
 				newWords = append(newWords, word)
+				fmt.Printf("%s\n", word)
 			}
 		}
 	}
 
 	// fmt.Println(correctPositions)
-	fmt.Println(newWords)
-	return words // Return the filtered list of words.
+	return newWords // Return the filtered list of words.
 }
 
 // SuggestWord suggests a word from the list of possible words.
 func SuggestWord(words []string) string {
 	// Placeholder: Implement the logic to choose the next word to suggest.
 	// This could be based on frequency analysis, elimination strategy, or random selection.
-
-	return words[0] // Return the first word in the list as a simple example.
+	if len(words) > 0 {
+		return words[0] // Return the first word in the list as a simple example.
+	} else {
+		return "No suggestions available" // Return a message indicating no suggestions.
+	}
 }
 
 func main() {
@@ -77,5 +88,5 @@ func main() {
 
 	words = FilterWords(words, correct, valid, absent)
 	suggestion := SuggestWord(words)
-	fmt.Printf("Suggested word: %s\n", suggestion)
+	fmt.Printf("Suggested words: %s\n", suggestion)
 }
